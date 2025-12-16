@@ -1,7 +1,12 @@
+import { Routes, Route } from "react-router-dom";
 import Home from "./Home";
+import MovieDetail from "./MovieDetail";
 
-function App() {
-  return <Home />;
+export default function App() {
+  return (
+    <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="/movie/:movieId" element={<MovieDetail />} />
+    </Routes>
+  );
 }
-
-export default App;

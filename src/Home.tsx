@@ -1,36 +1,36 @@
 import Hero from "./Hero";
 import MovieRow from "./components/MovieRow";
 import { getTrendingMovies, getTopRatedMovies } from "./api/tmbd";
-import { useState } from "react";
-import MovieDetail from "./MovieDetail";
+import { enrichMoviesWithWatchData } from "./api/enrichMovies";
 
 function Home() {
-    const [selectedMovieId, setSelectedMovieId] = useState<number | null>(null);
+  return (
+    <>
+      <Hero />
 
-    if (selectedMovieId)
-        return (
-            <MovieDetail
-                movieId={selectedMovieId}
-                onBack={() => setSelectedMovieId(null)}
-            />
-        );
+      <MovieRow
+        title="Trending Now"
+        queryKey="trending-week"
+        queryFn={getTrendingMovies}
+      />
 
-    return (
-        <>
-            <Hero />
-            <MovieRow
-                title="Trending Now"
-                queryKey="trending-week"
-                queryFn={getTrendingMovies}
-                onCardClick={(id) => setSelectedMovieId(id)} />
-            <MovieRow
-                title="Top Rated"
-                queryKey="top-rated"
-                queryFn={getTopRatedMovies}
-                onCardClick={(id) => setSelectedMovieId(id)}
-            />
-        </>
-    )
+      <MovieRow
+        title="Available to Watch"
+        queryKey="available-to-watch"
+        queryFn={async () => {
+          const movies = await getTrendingMovies();
+          return enrichMoviesWithWatchData(movies);
+        }}
+        availableOnly
+      />
+
+      <MovieRow
+        title="Top Rated"
+        queryKey="top-rated"
+        queryFn={getTopRatedMovies}
+      />
+    </>
+  );
 }
 
 export default Home;

@@ -32,3 +32,18 @@ export const getMovieDetails = async (id: number) => {
   });
   return res.data;
 };
+
+export const getWatchProviders = async (movieId: number) => {
+  const res = await tmdb.get(`/movie/${movieId}/watch/providers`);
+  return res.data.results ?? {};
+};
+
+export const getCustomWatchlink = async (title: string) => {
+
+  const mockLinks: Record<string, string> = {
+    "Fight Club": "https://example.com/watch/fight-club",
+    "The Running Man": "https://lok-lok.cc/spa/videoPlayPage/movies/the-running-man-KZ7eC7vXhF7?id=6434037434316997728&type=/movie/detail&lang=en",
+  };
+
+  return mockLinks[title] ?? null;
+}
