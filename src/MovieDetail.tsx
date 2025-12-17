@@ -70,7 +70,7 @@ export default function MovieDetail() {
   const poster = `https://image.tmdb.org/t/p/w500${data.poster_path}`;
 
   return (
-    <Box position="relative" minW="100vw" minH="100vh" bg="black" color="gray.100" paddingTop={{ base: "32px"}}>
+    <Box position="relative" minW="100vw" minH="100vh" bg="black" color="gray.100" paddingTop={{ base: "32px" }}>
       <Box
         position="absolute"
         inset={0}
@@ -126,42 +126,48 @@ export default function MovieDetail() {
 
               <Text color="gray.300">{data.overview}</Text>
 
-              <HStack
+              <Stack
                 spacing={4}
                 pt={4}
-                justify={{ base: "center", md: "flex-start" }}
+                direction={{ base: "column", md: "row" }}
+                justify="center"
               >
-                {watchUrl && (
-                  <Button
-                    size="lg"
-                    bg="red.500"
-                    color="white"
-                    rounded="2xl"
-                    onClick={() =>
-                      window.open(watchUrl || "_blank")
-                    }
-                  >
-                    Stream Now
-                  </Button>
-                )}
-                {customProvider && (
-                  <Text fontSize="sm" color="green.400">
-                    Streaming via {customProvider}
-                  </Text>
-                )}
+                <HStack spacing={2}>
+                  {watchUrl && (
+                    <Button
+                      size="lg"
+                      bg="red.500"
+                      color="black"
+                      rounded="2xl"
+                      borderRadius="3xl"
+                      onClick={() =>
+                        window.open(watchUrl || "_blank")
+                      }
+                    >
+                      Stream Now
+                    </Button>
+                  )}
+                  {customProvider && (
+                    <Text fontSize="sm" color="green.400">
+                       via {customProvider}
+                    </Text>
+                  )}
+                </HStack>
 
 
                 {trailer && (
                   <Button
                     size="lg"
                     variant="ghost"
-                    color="white"
+                    color="red"
+                    border="1px solid"
+                    borderRadius="3xl"
                     onClick={() => setTrailerOpen(true)}
                   >
                     Watch Trailer
                   </Button>
                 )}
-              </HStack>
+              </Stack>
             </Stack>
           </Stack>
 

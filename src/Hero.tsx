@@ -93,6 +93,7 @@ export default function Hero() {
               color="black"
               _hover={{ bg: "gray.200" }}
               rounded="2xl"
+              borderRadius="3xl"
               px={6}
             >
               Watch Trailer
@@ -104,6 +105,7 @@ export default function Hero() {
                 borderColor="gray.600"
                 color="white"
                 rounded="2xl"
+                borderRadius="3xl"
                 px={6}
                 onClick={() => window.open(watchUrl || "_blank")}
               >
