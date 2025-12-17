@@ -12,17 +12,19 @@ export const tmdb = axios.create({
 
 export const getTrendingMovie = async () => {
   const res = await tmdb.get("/trending/movie/week");
+  console.log(res.data.results[0]);
   return res.data.results[0] ?? null;
 };
 
 export const getTopRatedMovies = async () => {
   const res = await tmdb.get("/movie/top_rated");
-  console.log(res.data.results);
+
   return Array.isArray(res.data.results) ? res.data.results : null;
 };
 
 export const getTrendingMovies = async () => {
   const res = await tmdb.get("/trending/movie/week");
+  console.log(res.data.results);
   return Array.isArray(res.data.results) ? res.data.results : [];
 };
 
@@ -30,6 +32,7 @@ export const getMovieDetails = async (id: number) => {
   const res = await tmdb.get(`/movie/${id}`, {
     params: { append_to_response: "credits,videos" },
   });
+  console.log(res.data);
   return res.data;
 };
 

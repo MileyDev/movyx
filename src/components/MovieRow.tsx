@@ -22,12 +22,10 @@ export default function MovieRow({
   });
 
   const movies = availableOnly
-    ? data.filter(
-        (m: any) => m.watchLink || m.customWatchLink
-      )
+    ? data.filter((m: any) => m.customWatchLink)
     : data;
 
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
   if (isLoading) {
     return (
@@ -47,11 +45,12 @@ export default function MovieRow({
       <HStack spacing={6} overflowX="auto" pb={4}>
         {movies.map((movie: any) =>
           movie.poster_path ? (
+
             <MovieCard
               key={movie.id}
               poster={movie.poster_path}
               title={movie.title}
-              isAvailable={!!(movie.watchLink || movie.customWatchLink)}
+              isAvailable={!!movie.customWatchLink}
               onClick={() => navigate(`/movie/${movie.id}`)}
             />
           ) : null

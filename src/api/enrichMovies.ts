@@ -1,20 +1,17 @@
-import { getWatchProviders } from "./tmbd";
-import { getCustomWatchlink } from "./tmbd";
+import { getCustomWatchLink } from "./movyx";
 
 export const enrichMoviesWithWatchData = async (movies: any[]) => {
   return Promise.all(
     movies.map(async (movie) => {
-      const providers = await getWatchProviders(movie.id);
-      const tmdbLink = providers?.US?.link;
-
-      const customLink = await getCustomWatchlink(movie.title);
+      const custom = await getCustomWatchLink(movie.id);
 
       return {
         ...movie,
-        watchLink: tmdbLink || null,
-        customWatchLink: customLink || null,
-        hasCustomLink: Boolean(customLink),
+        hasCustomLink: !!custom,
+        customWatchLink: custom?.url ?? null,
+        watchProvider: custom?.provider ?? null,
       };
     })
   );
 };
+

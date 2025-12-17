@@ -13,6 +13,10 @@ const theme = extendTheme({
       },
     },
   },
+  fonts: {
+    heading: 'Quicksand, system-ui, sans-serif',
+    body: 'Quicksand, system-ui, sans-serif'
+  },
 });
 
 export default theme;

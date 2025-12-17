@@ -3,6 +3,7 @@ import MovieRow from "./components/MovieRow";
 import { getTrendingMovies, getTopRatedMovies } from "./api/tmbd";
 import { enrichMoviesWithWatchData } from "./api/enrichMovies";
 
+
 function Home() {
   return (
     <>
