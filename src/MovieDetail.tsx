@@ -53,8 +53,10 @@ export default function MovieDetail() {
   const tmdbWatchLink = regionProviders?.link;
   const customWatchLink = customLinkData?.url ?? null;
   const customProvider = customLinkData?.provider ?? null;
+  const customDownloadLink = customLinkData?.downloadUrl ?? null;
 
   const watchUrl = customWatchLink || tmdbWatchLink;
+  const downloadUrl = customDownloadLink || "_blank";
   const movieTitle = data?.title || "this movie";
 
 
@@ -69,6 +71,11 @@ export default function MovieDetail() {
   const handleSetTrailer = () => {
     setTrailerOpen(true);
     posthog.capture("watch_trailer_clicked", { movieTitle });
+  }
+
+  const handleDownload = () => {
+    window.open(downloadUrl);
+    posthog.capture("movie_downloaded", { movieTitle });
   }
 
   if (isLoading) return <Spinner color="gray.400" />;
@@ -144,7 +151,7 @@ export default function MovieDetail() {
                 direction={{ base: "column", md: "row" }}
                 justify="center"
               >
-                <HStack spacing={2}>
+                <HStack spacing={4}>
                   {watchUrl && (
                     <Button
                       size="lg"
@@ -153,7 +160,7 @@ export default function MovieDetail() {
                       rounded="2xl"
                       borderRadius="3xl"
                       onClick={() =>
-                       handleStreamNow()
+                        handleStreamNow()
                       }
                     >
                       Stream Now
@@ -161,7 +168,7 @@ export default function MovieDetail() {
                   )}
                   {customProvider && (
                     <Text fontSize="sm" color="green.400">
-                       via {customProvider}
+                      via {customProvider}
                     </Text>
                   )}
                 </HStack>
@@ -177,6 +184,19 @@ export default function MovieDetail() {
                     onClick={() => handleSetTrailer()}
                   >
                     Watch Trailer
+                  </Button>
+                )}
+
+                {downloadUrl && (
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    color="red"
+                    border="1px solid"
+                    borderRadius="3xl"
+                    onClick={() => handleDownload()}
+                  >
+                    Download
                   </Button>
                 )}
               </Stack>
