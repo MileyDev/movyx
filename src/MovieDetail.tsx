@@ -56,7 +56,7 @@ export default function MovieDetail() {
   const customDownloadLink = customLinkData?.downloadUrl ?? null;
 
   const watchUrl = customWatchLink || tmdbWatchLink;
-  const downloadUrl = customDownloadLink || "_blank";
+  const downloadUrl = customDownloadLink || null;
   const movieTitle = data?.title || "this movie";
 
 
