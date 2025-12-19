@@ -21,6 +21,7 @@ import { getMovieDetails, getWatchProviders } from "./api/tmbd";
 import { getCustomWatchLink } from "./api/movyx";
 import { useParams } from "react-router-dom";
 import { useState } from "react";
+import posthog from "posthog-js";
 
 
 const MotionBox = motion(Box);
@@ -54,10 +55,21 @@ export default function MovieDetail() {
   const customProvider = customLinkData?.provider ?? null;
 
   const watchUrl = customWatchLink || tmdbWatchLink;
+  const movieTitle = data?.title || "this movie";
 
 
 
   const [isTrailerOpen, setTrailerOpen] = useState(false);
+
+  const handleStreamNow = () => {
+    window.open(watchUrl || "_blank");
+    posthog.capture("stream_now_clicked", { movieTitle });
+  };
+
+  const handleSetTrailer = () => {
+    setTrailerOpen(true);
+    posthog.capture("watch_trailer_clicked", { movieTitle });
+  }
 
   if (isLoading) return <Spinner color="gray.400" />;
   if (isError || !data) return <Text>Unable to load movie.</Text>;
@@ -141,7 +153,7 @@ export default function MovieDetail() {
                       rounded="2xl"
                       borderRadius="3xl"
                       onClick={() =>
-                        window.open(watchUrl || "_blank")
+                       handleStreamNow()
                       }
                     >
                       Stream Now
@@ -162,7 +174,7 @@ export default function MovieDetail() {
                     color="red"
                     border="1px solid"
                     borderRadius="3xl"
-                    onClick={() => setTrailerOpen(true)}
+                    onClick={() => handleSetTrailer()}
                   >
                     Watch Trailer
                   </Button>

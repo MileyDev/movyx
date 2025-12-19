@@ -5,11 +5,18 @@ import {
   Text,
   Stack,
   Spinner,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalBody,
+  ModalCloseButton,
 } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { getTrendingMovie } from "./api/tmbd";
 import { getCustomWatchLink } from "./api/movyx";
+import posthog from "posthog-js";
+import { useState } from "react";
 
 const MotionBox = motion(Box);
 
@@ -20,8 +27,10 @@ export default function Hero() {
     queryFn: getTrendingMovie,
   });
 
-  
+  const [trailerOpen, setTrailerOpen] = useState(false);
+
   const id = data?.id ? Number(data.id) : undefined;
+  const movieTitle = data?.title || "this movie";
 
 
   const { data: movieLink } = useQuery({
@@ -30,8 +39,22 @@ export default function Hero() {
     enabled: !!id,
   })
 
+  const handleStreamNow = () => {
+    window.open(watchUrl || "_blank");
+    posthog.capture("trending_now_watched", { movieTitle });
+  };
+
+  const handleSetTrailer = () => {
+    setTrailerOpen(true);
+    posthog.capture("trending_now_trailer_clicked", { movieTitle });
+  }
+
   const customLink = movieLink?.url ?? null;
   const watchUrl = customLink;
+
+  const trailer = data.videos?.results?.find(
+    (v: any) => v.type === "Trailer" && v.site === "YouTube"
+  );
 
   if (isLoading) {
     return (
@@ -95,6 +118,7 @@ export default function Hero() {
               rounded="2xl"
               borderRadius="3xl"
               px={6}
+              onClick={() => handleSetTrailer()}
             >
               Watch Trailer
             </Button>
@@ -107,13 +131,32 @@ export default function Hero() {
                 rounded="2xl"
                 borderRadius="3xl"
                 px={6}
-                onClick={() => window.open(watchUrl || "_blank")}
+                onClick={() => handleStreamNow()}
               >
                 Stream Now
               </Button>
             )}
           </Stack>
         </Stack>
+
+        <Modal isOpen={trailerOpen} onClose={() => setTrailerOpen(false)} size="4xl" isCentered>
+          <ModalOverlay bg="blackAlpha.800" />
+          <ModalContent bg="black">
+            <ModalCloseButton color="white" />
+            <ModalBody p={0}>
+              {trailer && (
+                <Box
+                  as="iframe"
+                  w="100%"
+                  h="500px"
+                  src={`https://www.youtube.com/embed/${trailer.key}?autoplay=1`}
+                  allow="autoplay; encrypted-media"
+                  allowFullScreen
+                />
+              )}
+            </ModalBody>
+          </ModalContent>
+        </Modal>
       </MotionBox>
     </Box>
   );

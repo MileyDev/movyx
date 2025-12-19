@@ -2,6 +2,7 @@ import { Box, Heading, HStack, Spinner } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import MovieCard from "./MovieCard";
+import posthog from "posthog-js";
 
 interface Props {
   title: string;
@@ -27,6 +28,11 @@ export default function MovieRow({
 
   const navigate = useNavigate();
 
+  const handleClick = (movieId: number) => {
+    navigate(`/movie/${movieId}`);
+    posthog.capture("movie_card_clicked", { movieId });
+  };
+
   if (isLoading) {
     return (
       <Box px={10} py={8}>
@@ -51,7 +57,7 @@ export default function MovieRow({
               poster={movie.poster_path}
               title={movie.title}
               isAvailable={!!movie.customWatchLink}
-              onClick={() => navigate(`/movie/${movie.id}`)}
+              onClick={() => handleClick(movie.id)}
             />
           ) : null
         )}
