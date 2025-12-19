@@ -13,7 +13,7 @@ import {
 } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
-import { getTrendingMovie } from "./api/tmbd";
+import { getMovieDetails, getTrendingMovie } from "./api/tmbd";
 import { getCustomWatchLink } from "./api/movyx";
 import posthog from "posthog-js";
 import { useState } from "react";
@@ -39,6 +39,12 @@ export default function Hero() {
     enabled: !!id,
   })
 
+  const { data: movieDetail } = useQuery({
+      queryKey: ["movie-details", id],
+      queryFn: () => getMovieDetails(id as number),
+      enabled: !!id,
+    });
+
   const handleStreamNow = () => {
     window.open(watchUrl || "_blank");
     posthog.capture("trending_now_watched", { movieTitle });
@@ -52,7 +58,7 @@ export default function Hero() {
   const customLink = movieLink?.url ?? null;
   const watchUrl = customLink;
 
-  const trailer = data.videos?.results?.find(
+  const trailer = movieDetail?.videos?.results?.find(
     (v: any) => v.type === "Trailer" && v.site === "YouTube"
   );
 
