@@ -41,6 +41,56 @@ export const getWatchProviders = async (movieId: number) => {
   return res.data.results ?? {};
 };
 
+export const getMoviesByGenre = async (genreId: number)  => {
+  const res = await tmdb.get("/discover/movie", {
+    params: {
+      with_genres: genreId,
+      sort_by: "popularity.desc",
+    },
+  });
+
+  console.log(res.data.results);
+  return res.data.results ?? [];
+};
+
+export const getHollyMovies = async () => {
+  const res = await tmdb.get("/discover/movie", {
+    params: {
+      with_original_language: "en",
+      region: "US",
+      sort_by: "popularity.desc",
+    },
+  });
+
+  console.log(res.data.results);
+  return res.data.results ?? [];
+};
+
+export const getKDramaShows = async () => {
+  const res = await tmdb.get("/discover/tv", {
+    params: {
+      with_original_language: "ko",
+      with_genres: 18,
+      sort_by: "popularity.desc",
+    },
+  });
+
+  return res.data.results ?? [];
+};
+
+export const searchMovies = async (query: string) => {
+  if (!query) return [];
+
+  const res = await tmdb.get("/search/multi", {
+    params: {
+      query,
+      include_adult: false,
+    },
+  });
+
+  return res.data.results;
+};
+
 export const getCustomWatchlink = async (title: string) => {
 
   const mockLinks: Record<string, string> = {

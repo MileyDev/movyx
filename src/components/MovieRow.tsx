@@ -28,8 +28,8 @@ export default function MovieRow({
 
   const navigate = useNavigate();
 
-  const handleClick = (movieId: number) => {
-    navigate(`/movie/${movieId}`);
+  const handleClick = (movieId: number, mediaType: string) => {
+    navigate(mediaType === "tv" ? `/tv/${movieId}` : `/movie/${movieId}`);
     posthog.capture("movie_card_clicked", { movieId });
   };
 
@@ -57,7 +57,7 @@ export default function MovieRow({
               poster={movie.poster_path}
               title={movie.title}
               isAvailable={!!movie.customWatchLink}
-              onClick={() => handleClick(movie.id)}
+              onClick={() => handleClick(movie.id, movie.media_type)}
             />
           ) : null
         )}

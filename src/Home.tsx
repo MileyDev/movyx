@@ -2,6 +2,7 @@ import Hero from "./Hero";
 import MovieRow from "./components/MovieRow";
 import { getTrendingMovies, getTopRatedMovies } from "./api/tmbd";
 import { enrichMoviesWithWatchData } from "./api/enrichMovies";
+import { categories } from "./api/categories";
 
 
 function Home() {
@@ -24,6 +25,15 @@ function Home() {
         }}
         availableOnly
       />
+
+      {categories.map((cat) => (
+        <MovieRow
+          key={cat.queryKey}
+          title={cat.title}
+          queryKey={cat.queryKey}
+          queryFn={cat.fetcher}
+        />
+      ))}
 
       <MovieRow
         title="Top Rated"
