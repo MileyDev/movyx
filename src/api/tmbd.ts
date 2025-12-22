@@ -41,7 +41,7 @@ export const getWatchProviders = async (movieId: number) => {
   return res.data.results ?? {};
 };
 
-export const getMoviesByGenre = async (genreId: number)  => {
+export const getMoviesByGenre = async (genreId: number) => {
   const res = await tmdb.get("/discover/movie", {
     params: {
       with_genres: genreId,
@@ -91,12 +91,17 @@ export const searchMovies = async (query: string) => {
   return res.data.results;
 };
 
-export const getCustomWatchlink = async (title: string) => {
+export const getSearchSuggestions = async (query: string) => {
+  if (!query || query.trim().length < 2) return [];
 
-  const mockLinks: Record<string, string> = {
-    "Fight Club": "https://example.com/watch/fight-club",
-    "The Running Man": "https://lok-lok.cc/spa/videoPlayPage/movies/the-running-man-KZ7eC7vXhF7?id=6434037434316997728&type=/movie/detail&lang=en",
-  };
+  const res = await tmdb.get("/search/multi", {
+    params: {
+      query,
+      include_adult: false,
+    },
+  });
 
-  return mockLinks[title] ?? null;
-}
+  return res.data.results.filter((movie: any) =>
+    (movie.media_type === "movie" || movie.media_type === "tv") &&
+    movie.poster_path).slice(0, 3);
+};
