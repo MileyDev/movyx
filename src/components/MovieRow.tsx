@@ -1,4 +1,4 @@
-import { Box, Heading, HStack, Spinner } from "@chakra-ui/react";
+import { Box, Center, Heading, HStack, Spinner } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import MovieCard from "./MovieCard";
@@ -36,7 +36,7 @@ export default function MovieRow({
   if (isLoading) {
     return (
       <Box px={10} py={8}>
-        <Spinner color="gray.500" />
+        <Center><Spinner border="4px" color="red.500" /></Center>
       </Box>
     );
   }

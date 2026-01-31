@@ -78,6 +78,14 @@ export const getKDramaShows = async () => {
   return res.data.results ?? [];
 };
 
+export const getTvDetails = async (id: number) => {
+  const res = await tmdb.get(`/tv/${id}`, {
+    params: { append_to_response: "credits,videos" },
+  });
+
+  return res.data;
+}
+
 export const searchMovies = async (query: string) => {
   if (!query) return [];
 
