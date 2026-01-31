@@ -17,6 +17,7 @@ import { getMovieDetails, getTrendingMovie } from "./api/tmbd";
 import { getCustomWatchLink } from "./api/movyx";
 import posthog from "posthog-js";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const MotionBox = motion(Box);
 
@@ -28,6 +29,8 @@ export default function Hero() {
   });
 
   const [trailerOpen, setTrailerOpen] = useState(false);
+
+  const navigate = useNavigate();
 
   const id = data?.id ? Number(data.id) : undefined;
   const movieTitle = data?.title || "this movie";
@@ -54,6 +57,11 @@ export default function Hero() {
     setTrailerOpen(true);
     posthog.capture("trending_now_trailer_clicked", { movieTitle });
   }
+
+  const handleClick = (movieId: number) => {
+    navigate(`/movie/${movieId}`);
+    posthog.capture("top_trending_clicked", { movieId });
+  };
 
   const customLink = movieLink?.url ?? null;
   const watchUrl = customLink;
@@ -106,6 +114,7 @@ export default function Hero() {
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.9 }}
+        onClick={() => handleClick(data.id)}
       >
         <Stack spacing={5} maxW="xl">
           <Heading fontSize={["3xl", "5xl", "6xl"]} fontWeight="600">
