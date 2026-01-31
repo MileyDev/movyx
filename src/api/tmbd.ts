@@ -28,6 +28,12 @@ export const getTrendingMovies = async () => {
   return Array.isArray(res.data.results) ? res.data.results : [];
 };
 
+export const getTrendingTvToday = async () => {
+  const res = await tmdb.get("/trending/tv/day");
+  return res.data.results?.slice(0, 20) ?? [];
+};
+
+
 export const getMovieDetails = async (id: number) => {
   const res = await tmdb.get(`/movie/${id}`, {
     params: { append_to_response: "credits,videos" },
@@ -85,6 +91,20 @@ export const getTvDetails = async (id: number) => {
 
   return res.data;
 }
+
+
+export const getLatestMovies = async () => {
+  const res = await tmdb.get("/discover/movie", {
+    params: {
+      sort_by: "release_date.desc",
+      include_adult: false,
+      page: 1,
+    },
+  });
+
+  return res.data.results?.slice(0, 20) ?? [];
+};
+
 
 export const searchMovies = async (query: string) => {
   if (!query) return [];

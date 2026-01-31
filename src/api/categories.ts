@@ -1,4 +1,4 @@
-import { getHollyMovies, getKDramaShows, getMoviesByGenre } from "./tmbd";
+import { getHollyMovies, getKDramaShows, getMoviesByGenre, getTrendingTvToday } from "./tmbd";
 
 export type CategoryType = "movie" | "tv";
 
@@ -21,6 +21,12 @@ export const categories: Category[] = [
         queryKey: "crime-movies",
         type: "movie",
         fetcher: () => getMoviesByGenre(80),
+    },
+    {
+        title: "Trending TV Shows",
+        queryKey: "trending-tv",
+        type: "tv",
+        fetcher: () => getTrendingTvToday(),
     },
     {
         title: "Comedy Movies",
